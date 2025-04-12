@@ -9,7 +9,7 @@
 
 ## Gradle
 ```
-implementation('me.saro:spring-rest-web-client:3.4.4.0')
+implementation("me.saro:spring-rest-web-client:3.4.4.0")
 ```
 
 ## Maven
