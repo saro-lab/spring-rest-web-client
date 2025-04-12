@@ -24,7 +24,7 @@ idea {
 }
 
 val springBootVersion = "3.4.4" // !! sync springBootVersion vals
-var minorVersion: Int = 0
+var minorVersion: Int = 1
 group = "me.saro"
 version = "$springBootVersion.$minorVersion"
 
@@ -34,8 +34,15 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework:spring-core")
+    implementation("org.springframework:spring-web")
+    implementation("org.springframework:spring-webflux")
+    implementation("org.springframework:spring-context")
+    implementation("io.projectreactor:reactor-core")
+    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
 
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
 }
