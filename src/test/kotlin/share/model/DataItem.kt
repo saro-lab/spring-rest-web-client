@@ -1,4 +1,4 @@
-package ktest.model
+package share.model
 
 data class DataItem(
     val provider: String,

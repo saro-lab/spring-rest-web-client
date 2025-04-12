@@ -1,6 +1,5 @@
 package jtest;
 
-import ktest.model.DataItem;
 import me.saro.ext.spring.rwc.EnableRestWebClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,13 +10,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.reactive.config.EnableWebFlux;
+import share.model.DataItem;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @EnableWebFlux
 @EnableRestWebClient
-@ComponentScan(basePackages = {"ktest.*"})
+@ComponentScan(basePackages = {"share.*"})
 public class BasicTest {
 
     @Autowired

@@ -22,7 +22,7 @@ implementation("me.saro:spring-rest-web-client:3.4.4.1")
 ```
 
 ## kotlin example
-```
+``` kotlin
 @RestWebClient(
     uri = "\${client.local.uri}/api/v1",
     environmentAliases = [
@@ -53,7 +53,7 @@ interface TestKotlinClient {
 ```
 
 ## Java Example
-```
+``` java
 @RestWebClient(
         uri = "${client.local.uri}/api/v1",
         environmentAliases = {

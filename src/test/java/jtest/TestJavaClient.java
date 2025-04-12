@@ -1,11 +1,11 @@
 package jtest;
 
-import ktest.model.ApiResponse;
-import ktest.model.DataItem;
 import me.saro.ext.spring.rwc.RestWebClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import share.model.ApiResponse;
+import share.model.DataItem;
 
 @RestWebClient(
         uri = "${client.local.uri}/api/v1",

@@ -1,10 +1,10 @@
-package ktest.server
+package share.server
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import ktest.model.ApiResponse
-import ktest.model.DataItem
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ServerWebExchange
+import share.model.ApiResponse
+import share.model.DataItem
 
 @RestController
 @RequestMapping("/api/v1/")
