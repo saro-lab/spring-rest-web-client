@@ -84,4 +84,11 @@ public class BasicTest {
         Assertions.assertEquals(token + "-2", res.getData());
         System.out.println(res.getData());
     }
+
+    @Test
+    public void test07() {
+        var res = testClient.patch("28372982");
+        Assertions.assertEquals("28372982", res);
+        System.out.println(res);
+    }
 }

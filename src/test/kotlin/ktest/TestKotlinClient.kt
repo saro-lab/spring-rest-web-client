@@ -28,6 +28,7 @@ interface TestKotlinClient {
     @DeleteMapping("/data")
     fun data2(@RequestParam dataItem: DataItem): Mono<ApiResponse<String>>
 
+    // blocking
     @PostMapping("/data")
     fun data3(@RequestBody dataItem: DataItem): ApiResponse<DataItem>
 
@@ -36,4 +37,8 @@ interface TestKotlinClient {
 
     @PutMapping("/param?a=\${token}")
     fun justParam2(@RequestParam("b") d: String): Mono<ApiResponse<String>>
+
+    // blocking
+    @PatchMapping("/patch")
+    fun patch(@RequestParam a: String): String
 }

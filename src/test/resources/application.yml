@@ -1,8 +1,12 @@
 spring.profiles.active: local
 
+
 client:
   local:
     uri: http://localhost:9876
     token: test-token
 server:
   port: 9876
+logging:
+  level:
+    root: debug

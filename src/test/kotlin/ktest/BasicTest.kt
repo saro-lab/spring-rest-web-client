@@ -81,4 +81,11 @@ class BasicTest{
         Assertions.assertEquals(res.data, "$token-2")
         println(res.data)
     }
+
+    @Test
+    fun test07() {
+        val res = testClient.patch("12346232561")
+        Assertions.assertEquals(res, "12346232561")
+        println(res)
+    }
 }

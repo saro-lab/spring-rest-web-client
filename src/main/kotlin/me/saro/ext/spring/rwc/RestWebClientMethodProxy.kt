@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.util.MultiValueMap
+import org.springframework.web.bind.annotation.BindParam
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
@@ -21,6 +22,7 @@ import java.lang.reflect.Type
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
+
 
 class RestWebClientMethodProxy(
     private val restWebClientProxy: RestWebClientProxy,
@@ -51,6 +53,7 @@ staticHeaders: ${httpMethodMappingWrapper.staticHeaders}
 dynamicHeaders: $dynamicHeaders
         """.trimIndent())
 
+
         val returnType: KType = method.kotlinFunction!!.returnType
         val returnJavaType = returnType.javaType
         // return
@@ -74,28 +77,29 @@ dynamicHeaders: $dynamicHeaders
         }
 
         // arguments
-        parameterProxy = method.parameters.map<Parameter, (WebClient.RequestBodyUriSpec, MutableMap<String, String>, MultiValueMap<String, String>, Any?) -> Unit> { parameter ->
+        parameterProxy = method.parameters.mapIndexed<Parameter, (WebClient.RequestBodyUriSpec, MutableMap<String, String>, MultiValueMap<String, String>, Any?) -> Unit> { index, parameter ->
             val name = parameter.name
 
             val header = parameter.getAnnotation(RequestHeader::class.java)
             val param = parameter.getAnnotation(RequestParam::class.java)
             val body = parameter.getAnnotation(RequestBody::class.java)
+            val bindParam = parameter.getAnnotation(BindParam::class.java)
 
             if (listOfNotNull(header, param, body).size > 1) {
-                throw IllegalArgumentException("Only one of @RequestHeader, @RequestParam, @RequestBody is allowed: $fullName.${method.name}.$name")
+                throw IllegalArgumentException("Only one of @RequestHeader, @RequestParam, @RequestBody, @BindParam is allowed: $fullName.${method.name}.$name")
             }
 
             if (header != null) {
                 { req, vars, params, arg ->
                     if (arg != null || header.required) {
-                        val hName = listOf(header.name, header.value, name).first(String::isNotEmpty)
+                        val hName = listOfNotNull(header.name, header.value, name).first(String::isNotEmpty)
                         req.headers { h -> h.set(hName, arg?.toString() ?: header.defaultValue) }
                     }
                 }
             } else if (param != null) {
                 { req, vars, params, arg ->
                     if (arg != null || param.required) {
-                        val hName = listOf(param.name, param.value, name).first(String::isNotEmpty)
+                        val hName = listOfNotNull(param.name, param.value, name).first(String::isNotEmpty)
                         val value = listOfNotNull(arg, param.defaultValue).first()
                         when {
                             isBasicType(value) -> params.add(hName, value.toString())
@@ -116,7 +120,8 @@ dynamicHeaders: $dynamicHeaders
             } else if (body != null) {
                 { req, vars, params, arg -> if (arg != null) { req.bodyValueWithType(arg) } }
             } else {
-                { req, vars, params, arg -> arg?.also { vars[name] = it.toString() } }
+                val bindName = bindParam?.value ?: name
+                { req, vars, params, arg -> arg?.also { vars[bindName] = it.toString() } }
             }
         }.toTypedArray()
     }
@@ -141,6 +146,8 @@ dynamicHeaders: $dynamicHeaders
 
         return returnProxy(client)
     }
+
+
 
     companion object {
         private val varPattern = Regex("\\{(.*?)}")

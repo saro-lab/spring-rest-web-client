@@ -2,14 +2,16 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/me.saro/spring-rest-web-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/me.saro/spring-rest-web-client)
 [![GitHub license](https://img.shields.io/github/license/saro-lab/spring-rest-web-client.svg)](https://github.com/saro-lab/spring-rest-web-client/blob/master/LICENSE)
 
+## Reactive(WebClient) Based REST Client for Spring
+- Support Non-Blocking and Blocking 
+
 # Requirements
-- spring-boot 3.x
+- Spring-Boot 3.x
 
 # QUICK START
-
 ## Gradle
 ```
-implementation("me.saro:spring-rest-web-client:3.4.4.1")
+implementation("me.saro:spring-rest-web-client:3.4.4.2")
 ```
 
 ## Maven
@@ -17,11 +19,11 @@ implementation("me.saro:spring-rest-web-client:3.4.4.1")
 <dependency>
   <groupId>me.saro</groupId>
   <artifactId>spring-rest-web-client</artifactId>
-  <version>3.4.4.1</version>
+  <version>3.4.4.2</version>
 </dependency>
 ```
 
-## kotlin example
+## Kotlin example
 ``` kotlin
 @RestWebClient(
     uri = "\${client.local.uri}/api/v1",
@@ -44,11 +46,19 @@ interface TestKotlinClient {
     @DeleteMapping("/data")
     fun data2(@RequestParam dataItem: DataItem): Mono<ApiResponse<String>>
 
+    // blocking
+    @PostMapping("/data")
+    fun data3(@RequestBody dataItem: DataItem): ApiResponse<DataItem>
+
     @PutMapping("/param")
     fun justParam1(@RequestParam a: String, @RequestParam("b") d: String): Mono<ApiResponse<String>>
 
     @PutMapping("/param?a=\${token}")
     fun justParam2(@RequestParam("b") d: String): Mono<ApiResponse<String>>
+
+    // blocking
+    @PatchMapping("/patch")
+    fun patch(@RequestParam a: String): String
 }
 ```
 
@@ -62,13 +72,15 @@ interface TestKotlinClient {
         }
 )
 public interface TestJavaClient {
+    // ko: 컴파일 시 -parameter을 넣는 경우 Java에서도 "@BindParam", "@RestParam.name"을 생략할 수 있다.
+    // en: When compiling, if you add -parameter, you can omit "@BindParam" and "@RestParam.name" in Java.
 
     @GetMapping("/${env}/test/{testValue}")
-    Mono<ApiResponse<String>> value1(@PathVariable("testValue") String testValue);
+    Mono<ApiResponse<String>> value1(@BindParam("testValue") String testValue);
 
     // consumes -> Accept
     @GetMapping(path = "/str/test/{testValue}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    Mono<ApiResponse<String>> value2(@PathVariable("testValue") String testValue);
+    Mono<ApiResponse<String>> value2(@BindParam("testValue") String testValue);
 
     @PostMapping("/data")
     Mono<ApiResponse<DataItem>> data1(@RequestBody DataItem dataItem);
@@ -76,11 +88,19 @@ public interface TestJavaClient {
     @DeleteMapping("/data")
     Mono<ApiResponse<String>> data2(@RequestParam DataItem dataItem);
 
+    // blocking
+    @PostMapping("/data")
+    ApiResponse<DataItem> data3(@RequestBody DataItem dataItem);
+
     @PutMapping("/param")
     Mono<ApiResponse<String>> justParam1(@RequestParam("a") String a, @RequestParam("b") String d);
 
     @PutMapping("/param?a=${token}")
     Mono<ApiResponse<String>> justParam2(@RequestParam("b") String d);
+
+    // blocking
+    @PatchMapping("/patch")
+    String patch(@RequestParam("a") String a);
 }
 ```
 
@@ -91,6 +111,9 @@ public interface TestJavaClient {
 ## Java Example / Test Code
 - [BasicTest.java](src/test/java/jtest/BasicTest.java)
 - [TestJavaClient.java](src/test/java/jtest/TestJavaClient.java)
+
+## Test Controller (Server)
+- [TestController.kt](src/test/kotlin/share/server/TestController.kt)
 
 ## repository
 - https://search.maven.org/artifact/me.saro/spring-rest-web-client

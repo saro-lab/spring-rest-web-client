@@ -24,7 +24,7 @@ idea {
 }
 
 val springBootVersion = "3.4.4" // !! sync springBootVersion vals
-var minorVersion: Int = 1
+var minorVersion: Int = 2
 group = "me.saro"
 version = "$springBootVersion.$minorVersion"
 
