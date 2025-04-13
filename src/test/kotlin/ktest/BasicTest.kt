@@ -58,6 +58,15 @@ class BasicTest{
     }
 
     @Test
+    fun test04_1() {
+        val input = DataItem("saro", "1", "j@saro.me")
+        val res = testClient.data3(input)
+        Assertions.assertEquals(res.code, "ok")
+        Assertions.assertEquals(res.data, DataItem("saro", "1", "j@saro.me"))
+        println(res.data)
+    }
+
+    @Test
     fun test05() {
         val res = testClient.justParam1("1", "2").block()
         Assertions.assertEquals(res.code, "ok")

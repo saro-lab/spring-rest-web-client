@@ -29,6 +29,9 @@ public interface TestJavaClient {
     @DeleteMapping("/data")
     Mono<ApiResponse<String>> data2(@RequestParam DataItem dataItem);
 
+    @PostMapping("/data")
+    ApiResponse<DataItem> data3(@RequestBody DataItem dataItem);
+
     @PutMapping("/param")
     Mono<ApiResponse<String>> justParam1(@RequestParam("a") String a, @RequestParam("b") String d);
 

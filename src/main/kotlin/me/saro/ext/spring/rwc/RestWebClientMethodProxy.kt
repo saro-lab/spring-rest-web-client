@@ -62,19 +62,20 @@ dynamicHeaders: $dynamicHeaders
                 }
                 ({ req -> req.retrieve().bodyToMono(typeReference) })
             }
+            returnJavaType is WebClient -> throw IllegalArgumentException("Use ReturnType WebClient.RequestBodyUriSpec or WebClient.ResponseSpec instead of WebClient: $fullName")
             returnJavaType is WebClient.RequestBodyUriSpec -> ({ req -> req })
             returnJavaType is WebClient.ResponseSpec -> ({ req -> req.retrieve() })
             else -> {
-                val typeName = returnType.javaType.typeName
-                throw IllegalArgumentException("$typeName not support in $fullName\n" +
-                    "Support return type: Mono<T>, WebClient.RequestBodyUriSpec, WebClient.ResponseSpec")
+                val typeReference = object : ParameterizedTypeReference<Any>() {
+                    override fun getType(): Type = returnJavaType
+                }
+                ({ req -> req.retrieve().bodyToMono(typeReference).block() })
             }
         }
 
         // arguments
         parameterProxy = method.parameters.map<Parameter, (WebClient.RequestBodyUriSpec, MutableMap<String, String>, MultiValueMap<String, String>, Any?) -> Unit> { parameter ->
             val name = parameter.name
-            val type = parameter.type
 
             val header = parameter.getAnnotation(RequestHeader::class.java)
             val param = parameter.getAnnotation(RequestParam::class.java)

@@ -28,6 +28,9 @@ interface TestKotlinClient {
     @DeleteMapping("/data")
     fun data2(@RequestParam dataItem: DataItem): Mono<ApiResponse<String>>
 
+    @PostMapping("/data")
+    fun data3(@RequestBody dataItem: DataItem): ApiResponse<DataItem>
+
     @PutMapping("/param")
     fun justParam1(@RequestParam a: String, @RequestParam("b") d: String): Mono<ApiResponse<String>>
 
