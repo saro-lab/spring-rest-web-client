@@ -15,15 +15,12 @@ import share.model.DataItem;
         }
 )
 public interface TestJavaClient {
-    // ko: 컴파일 시 -parameter을 넣는 경우 Java에서도 "@BindParam", "@RestParam.name"을 생략할 수 있다.
-    // en: When compiling, if you add -parameter, you can omit "@BindParam" and "@RestParam.name" in Java.
-
     @GetMapping("/${env}/test/{testValue}")
-    Mono<ApiResponse<String>> value1(@BindParam("testValue") String testValue);
+    Mono<ApiResponse<String>> value1(String testValue);
 
     // consumes -> Accept
     @GetMapping(path = "/str/test/{testValue}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    Mono<ApiResponse<String>> value2(@BindParam("testValue") String testValue);
+    Mono<ApiResponse<String>> value2(String testValue);
 
     @PostMapping("/data")
     Mono<ApiResponse<DataItem>> data1(@RequestBody DataItem dataItem);
@@ -43,5 +40,5 @@ public interface TestJavaClient {
 
     // blocking
     @PatchMapping("/patch")
-    String patch(@RequestParam("a") String a);
+    String patch(@RequestParam String a);
 }

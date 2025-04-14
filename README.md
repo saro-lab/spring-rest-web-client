@@ -2,19 +2,17 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/me.saro/spring-rest-web-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/me.saro/spring-rest-web-client)
 [![GitHub license](https://img.shields.io/github/license/saro-lab/spring-rest-web-client.svg)](https://github.com/saro-lab/spring-rest-web-client/blob/master/LICENSE)
 
-## Reactive(WebClient) Based REST Client for Spring
-- Support Non-Blocking and Blocking 
-
-# Requirements
+#### Reactive(WebClient) Based REST Client for Spring
+- Support Non-Blocking, Blocking 
 - Spring-Boot 3.x
 
 # QUICK START
-## Gradle
+### Gradle
 ```
 implementation("me.saro:spring-rest-web-client:3.4.4.2")
 ```
 
-## Maven
+### Maven
 ``` xml
 <dependency>
   <groupId>me.saro</groupId>
@@ -23,7 +21,12 @@ implementation("me.saro:spring-rest-web-client:3.4.4.2")
 </dependency>
 ```
 
-## Kotlin example
+### Enable
+```
+@EnableRestWebClient
+```
+
+### Kotlin example
 ``` kotlin
 @RestWebClient(
     uri = "\${client.local.uri}/api/v1",
@@ -62,7 +65,32 @@ interface TestKotlinClient {
 }
 ```
 
-## Java Example
+### Java runtime and test cautions
+- https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.2-Release-Notes
+- ko
+  ```
+  코틀린과 달리 자바에선 -parameters 옵션을 넣지 않으면 리플랙션시 Methods 의 ParameterName 을 알 수 없습니다.
+  다행히 스프링부트 2.2 부터는 gradle 을 통해 -parameters 옵션을 기본으로 사용합니다.
+  하지만 gradle을 통하지 않고 runtime 하거나 test 할 경우 -parameters 옵션을 넣거나 아래 예제처럼 @BindParam("name"), @RequestParam("name") 을 명시하시기 바랍니다.
+  ```
+- en
+  ```
+  Unlike Kotlin, in Java, if the -parameters option is not enabled, you cannot retrieve method parameter names via reflection.
+  Fortunately, starting from Spring Boot 2.2, the -parameters option is enabled by default when using Gradle.
+  However, if you run or test your application without Gradle, make sure to explicitly enable the -parameters option or specify parameter names using annotations like `@BindParam("name")` or `@RequestParam("name")`, as shown in the example below.
+  ```
+- use -parameters option
+    ```java
+    @GetMapping("/{b}")
+    Mono<String> value1(String b, @RequestParam String p);
+    ```
+- without -parameters option
+    ```java
+    @GetMapping("/{b}")
+    Mono<String> value1(@BindParam("b") String b, @RequestParam("p") String p);
+    ```
+
+### Java Example
 ``` java
 @RestWebClient(
         uri = "${client.local.uri}/api/v1",
@@ -72,15 +100,12 @@ interface TestKotlinClient {
         }
 )
 public interface TestJavaClient {
-    // ko: 컴파일 시 -parameter을 넣는 경우 Java에서도 "@BindParam", "@RestParam.name"을 생략할 수 있다.
-    // en: When compiling, if you add -parameter, you can omit "@BindParam" and "@RestParam.name" in Java.
-
     @GetMapping("/${env}/test/{testValue}")
-    Mono<ApiResponse<String>> value1(@BindParam("testValue") String testValue);
+    Mono<ApiResponse<String>> value1(String testValue);
 
     // consumes -> Accept
     @GetMapping(path = "/str/test/{testValue}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    Mono<ApiResponse<String>> value2(@BindParam("testValue") String testValue);
+    Mono<ApiResponse<String>> value2(String testValue);
 
     @PostMapping("/data")
     Mono<ApiResponse<DataItem>> data1(@RequestBody DataItem dataItem);
@@ -100,7 +125,7 @@ public interface TestJavaClient {
 
     // blocking
     @PatchMapping("/patch")
-    String patch(@RequestParam("a") String a);
+    String patch(@RequestParam String a);
 }
 ```
 
