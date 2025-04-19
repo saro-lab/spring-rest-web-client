@@ -41,4 +41,8 @@ public interface TestJavaClient {
     // blocking
     @PatchMapping("/patch")
     String patch(@RequestParam String a);
+
+    // blocking
+    @PostMapping(path = "/body", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    String body(@RequestParam String a, @RequestParam("b") String c);
 }

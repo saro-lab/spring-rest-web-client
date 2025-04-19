@@ -88,4 +88,11 @@ class BasicTest{
         Assertions.assertEquals(res, "12346232561")
         println(res)
     }
+
+    @Test
+    fun test08() {
+        val res: String? = testClient.body("111&1", "22=22")
+        Assertions.assertEquals("a=111%261&b=22%3D22", res)
+        println(res)
+    }
 }

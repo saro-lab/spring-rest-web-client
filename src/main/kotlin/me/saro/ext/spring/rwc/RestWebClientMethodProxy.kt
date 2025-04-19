@@ -19,6 +19,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.net.URLEncoder
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
@@ -44,6 +45,7 @@ class RestWebClientMethodProxy(
     private val returnProxy: (WebClient.RequestBodyUriSpec) -> Any
     private val parameterProxy: Array<(WebClient.RequestBodyUriSpec, MutableMap<String, String>, MultiValueMap<String, String>, Any?) -> Unit>
     private val fullName: String = method.declaringClass.name + "." + method.name
+    private val formUrlEncoded: Boolean = httpMethodMappingWrapper.formUrlEncoded
 
     init {
         log.debug("""
@@ -72,7 +74,7 @@ dynamicHeaders: $dynamicHeaders
                 val typeReference = object : ParameterizedTypeReference<Any>() {
                     override fun getType(): Type = returnJavaType
                 }
-                ({ req -> req.retrieve().bodyToMono(typeReference).block() })
+                ({ req -> req.retrieve().bodyToMono(typeReference).block()!! })
             }
         }
 
@@ -135,8 +137,20 @@ dynamicHeaders: $dynamicHeaders
         val vars = mutableMapOf<String, String>()
         args?.forEachIndexed { index, arg -> parameterProxy[index](client, vars, params, arg) }
 
+        if (formUrlEncoded) {
+            if (params.isNotEmpty()) {
+                val body: String = params.map { (k, v) ->
+                    val ek = URLEncoder.encode(k, Charsets.UTF_8)
+                    v.joinToString("&") { vi -> ek + '=' + URLEncoder.encode(vi, Charsets.UTF_8) }
+                }.joinToString("&")
+                client.bodyValue(body)
+            }
+        }
+
         client.uri {
-            it.queryParams(params)
+            if (!formUrlEncoded) {
+                it.queryParams(params)
+            }
             it.build(vars)
         }
 

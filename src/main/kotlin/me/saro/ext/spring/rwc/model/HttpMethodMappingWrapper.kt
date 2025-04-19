@@ -14,6 +14,7 @@ class HttpMethodMappingWrapper(
     val path: String
     val staticHeaders: Map<String, String>
     val dynamicHeaders: Map<String, String>
+    val formUrlEncoded get(): Boolean = staticHeaders.any { (k, v) -> listOf(HttpHeaders.CONTENT_TYPE, HttpHeaders.ACCEPT).contains(k) && v.contains("x-www-form-urlencoded") }
 
     init {
         val className = method.declaringClass.name

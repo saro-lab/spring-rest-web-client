@@ -24,7 +24,7 @@ idea {
 }
 
 val springBootVersion = "3.4.4" // !! sync springBootVersion vals
-var minorVersion: Int = 2
+var minorVersion: Int = 3
 group = "me.saro"
 version = "$springBootVersion.$minorVersion"
 
@@ -51,6 +51,8 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
+    withJavadocJar()
+    withSourcesJar()
 }
 
 kotlin {
@@ -67,7 +69,6 @@ configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
-
 
 publishing {
     publications {
@@ -125,11 +126,3 @@ publishing {
 signing {
     sign(publishing.publications["maven"])
 }
-
-tasks.withType<Javadoc>().configureEach {
-    options {
-        this as StandardJavadocDocletOptions
-        addBooleanOption("Xdoclint:none", true)
-    }
-}
-

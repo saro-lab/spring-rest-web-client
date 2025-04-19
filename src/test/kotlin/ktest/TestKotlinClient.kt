@@ -41,4 +41,8 @@ interface TestKotlinClient {
     // blocking
     @PatchMapping("/patch")
     fun patch(@RequestParam a: String): String
+
+    // blocking
+    @PostMapping(path = ["/body"], consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
+    fun body(@RequestParam a: String, @RequestParam("b") c: String): String
 }

@@ -16,7 +16,7 @@ import share.model.DataItem;
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @EnableWebFlux
-@EnableRestWebClient
+@EnableRestWebClient(basePackages = "jtest")
 @ComponentScan(basePackages = {"share.*"})
 public class BasicTest {
 
@@ -89,6 +89,13 @@ public class BasicTest {
     public void test07() {
         var res = testClient.patch("28372982");
         Assertions.assertEquals("28372982", res);
+        System.out.println(res);
+    }
+
+    @Test
+    public void test08() {
+        var res = testClient.body("111&1", "22=22");
+        Assertions.assertEquals("a=111%261&b=22%3D22", res);
         System.out.println(res);
     }
 }

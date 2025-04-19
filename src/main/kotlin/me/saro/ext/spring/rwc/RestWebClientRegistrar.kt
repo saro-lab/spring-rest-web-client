@@ -26,8 +26,12 @@ class RestWebClientRegistrar(
         val config: MutableMap<String, Any> = importingClassMetadata.getAnnotationAttributes(EnableRestWebClient::class.java.name)
             ?: return
 
+        @Suppress("UNCHECKED_CAST")
         val basePackages: Array<String> = (config["basePackages"] as Array<String>)
-            .let { if (it.isEmpty()) arrayOf("") else it }
+            .map { it.replace(".", "/") }
+            .distinct()
+            .let { it.ifEmpty { listOf("") } }
+            .toTypedArray()
 
         findAllRestWebClient(registry, basePackages)
             .map { RestWebClientProxy.of(it, environmentWrapper) }
