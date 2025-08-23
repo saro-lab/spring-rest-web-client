@@ -23,7 +23,7 @@ class RestWebClientRegistrar(
         importingClassMetadata: AnnotationMetadata,
         registry: BeanDefinitionRegistry
     ) {
-        val config: MutableMap<String, Any> = importingClassMetadata.getAnnotationAttributes(EnableRestWebClient::class.java.name)
+        val config: MutableMap<String, Any?> = importingClassMetadata.getAnnotationAttributes(EnableRestWebClient::class.java.name)
             ?: return
 
         @Suppress("UNCHECKED_CAST")

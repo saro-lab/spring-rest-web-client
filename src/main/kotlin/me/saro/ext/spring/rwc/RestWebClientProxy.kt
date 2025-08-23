@@ -21,14 +21,18 @@ class RestWebClientProxy private constructor(
     private val clazz: Class<*> = Class.forName(className)
     private val instant = Proxy.newProxyInstance(clazz.classLoader, arrayOf(clazz), this)
     val uri: String
+
+
+
     val beanDefinition: BeanDefinition = GenericBeanDefinition().apply {
-        beanClass = clazz
-        instanceSupplier = Supplier { instant }
-    }
+            setBeanClass(clazz)
+            instanceSupplier = Supplier { instant }
+        }
     private val methodProxyMap: Map<Method, RestWebClientMethodProxy>
 
     init {
-        val restWebClient: MutableMap<String, Any> = annotationMetadata.getAnnotationAttributes(RestWebClient::class.java.name)!!
+
+        val restWebClient: Map<String, Any?> = annotationMetadata.getAnnotationAttributes(RestWebClient::class.java.name)!!
         val envWebClient = environmentWrapper.bindAliases(restWebClient["environmentAliases"] as Array<String>)
         this.uri = envWebClient.replacePattern(restWebClient["uri"] as String)
             .also { if (it.isEmpty()) { throw IllegalArgumentException("@RestWebClient(uri) is empty $className") } }

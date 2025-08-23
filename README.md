@@ -4,12 +4,12 @@
 
 #### Reactive(WebClient) Based REST Client for Spring
 - Support Non-Blocking, Blocking 
-- Spring-Boot 3.x
+- Spring-Boot 4.x
 
 # QUICK START
 ### Gradle
 ```
-implementation("me.saro:spring-rest-web-client:3.4.4.3")
+implementation("me.saro:spring-rest-web-client:4.0.0.0")
 ```
 
 ### Maven
@@ -17,7 +17,7 @@ implementation("me.saro:spring-rest-web-client:3.4.4.3")
 <dependency>
   <groupId>me.saro</groupId>
   <artifactId>spring-rest-web-client</artifactId>
-  <version>3.4.4.3</version>
+  <version>4.0.0.0</version>
 </dependency>
 ```
 

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     val kotlinVersion = "2.1.20"
-    val springBootVersion = "3.4.4" // !! sync springBootVersion vals
+    val springBootVersion = "4.0.0-M2" // !! sync springBootVersion vals
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.allopen") version kotlinVersion
@@ -23,8 +23,8 @@ idea {
     }
 }
 
-val springBootVersion = "3.4.4" // !! sync springBootVersion vals
-var minorVersion: Int = 3
+val springBootVersion = "4.0.0" // !! sync springBootVersion vals
+var minorVersion: Int = 0
 group = "me.saro"
 version = "$springBootVersion.$minorVersion"
 
