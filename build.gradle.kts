@@ -10,6 +10,7 @@ plugins {
     id("org.springframework.boot") version springBootVersion
     id("io.spring.dependency-management") version "1.1.7"
     id("org.ec4j.editorconfig") version "0.1.0"
+    id("com.vanniktech.maven.publish") version "0.28.0" apply false
     id("idea")
     signing
     `maven-publish`
@@ -69,32 +70,72 @@ configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
+//
+//publishing {
+//    publications {
+//        create<MavenPublication>("maven") {
+//
+//            groupId = "me.saro"
+//            artifactId = "spring-rest-web-client"
+//            version = version
+//
+//            from(components["java"])
+//
+//            repositories {
+//                maven {
+//                    credentials {
+//                        try {
+//                            username = project.property("sonatype.username").toString()
+//                            password = project.property("sonatype.password").toString()
+//                        } catch (e: Exception) {
+//                            println("warn: " + e.message)
+//                        }
+//                    }
+//                    val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+//                    val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+//                    url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+//                }
+//            }
+//
+//            pom {
+//                name.set("Spring RestWebClient")
+//                description.set("Rest WebClient in Spring")
+//                url.set("https://saro.me")
+//
+//                licenses {
+//                    license {
+//                        name.set("The Apache License, Version 2.0")
+//                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+//                    }
+//                }
+//                developers {
+//                    developer {
+//                        name.set("PARK Yong Seo")
+//                        email.set("j@saro.me")
+//                    }
+//                }
+//                scm {
+//                    connection.set("scm:git:git://github.com/saro-lab/spring-rest-web-client.git")
+//                    developerConnection.set("scm:git:git@github.com:saro-lab/spring-rest-web-client.git")
+//                    url.set("https://github.com/saro-lab/spring-rest-web-client")
+//                }
+//            }
+//        }
+//    }
+//}
 
+
+
+// Maven 퍼블리싱 설정
 publishing {
     publications {
         create<MavenPublication>("maven") {
 
+            from(components["java"])
+
             groupId = "me.saro"
             artifactId = "spring-rest-web-client"
             version = version
-
-            from(components["java"])
-
-            repositories {
-                maven {
-                    credentials {
-                        try {
-                            username = project.property("sonatype.username").toString()
-                            password = project.property("sonatype.password").toString()
-                        } catch (e: Exception) {
-                            println("warn: " + e.message)
-                        }
-                    }
-                    val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-                    val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-                    url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-                }
-            }
 
             pom {
                 name.set("Spring RestWebClient")
@@ -121,8 +162,21 @@ publishing {
             }
         }
     }
+
+    // Central Portal 리포지토리 설정
+    repositories {
+        maven {
+            name = "MavenCentral"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = project.property("sonatype.username").toString()
+                password = project.property("sonatype.password").toString()
+            }
+        }
+    }
 }
 
 signing {
     sign(publishing.publications["maven"])
+//    useGpgCmd()
 }
