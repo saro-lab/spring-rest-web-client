@@ -1,4 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.net.HttpURLConnection
+import java.net.URI
+import java.util.Base64
 
 plugins {
     val kotlinVersion = "2.2.20"
@@ -70,72 +73,31 @@ configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
-//
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//
-//            groupId = "me.saro"
-//            artifactId = "spring-rest-web-client"
-//            version = version
-//
-//            from(components["java"])
-//
-//            repositories {
-//                maven {
-//                    credentials {
-//                        try {
-//                            username = project.property("sonatype.username").toString()
-//                            password = project.property("sonatype.password").toString()
-//                        } catch (e: Exception) {
-//                            println("warn: " + e.message)
-//                        }
-//                    }
-//                    val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-//                    val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-//                    url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-//                }
-//            }
-//
-//            pom {
-//                name.set("Spring RestWebClient")
-//                description.set("Rest WebClient in Spring")
-//                url.set("https://saro.me")
-//
-//                licenses {
-//                    license {
-//                        name.set("The Apache License, Version 2.0")
-//                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-//                    }
-//                }
-//                developers {
-//                    developer {
-//                        name.set("PARK Yong Seo")
-//                        email.set("j@saro.me")
-//                    }
-//                }
-//                scm {
-//                    connection.set("scm:git:git://github.com/saro-lab/spring-rest-web-client.git")
-//                    developerConnection.set("scm:git:git@github.com:saro-lab/spring-rest-web-client.git")
-//                    url.set("https://github.com/saro-lab/spring-rest-web-client")
-//                }
-//            }
-//        }
-//    }
-//}
 
-
-
-// Maven 퍼블리싱 설정
 publishing {
     publications {
         create<MavenPublication>("maven") {
 
-            from(components["java"])
-
             groupId = "me.saro"
             artifactId = "spring-rest-web-client"
             version = version
+
+            from(components["java"])
+
+            repositories {
+                maven {
+                    credentials {
+                        try {
+                            username = project.property("sonatype.username").toString()
+                            password = project.property("sonatype.password").toString()
+                        } catch (e: Exception) {
+                            println("warn: " + e.message)
+                        }
+                    }
+                    name = "ossrh-staging-api"
+                    url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+                }
+            }
 
             pom {
                 name.set("Spring RestWebClient")
@@ -162,21 +124,27 @@ publishing {
             }
         }
     }
-
-    // Central Portal 리포지토리 설정
-    repositories {
-        maven {
-            name = "MavenCentral"
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = project.property("sonatype.username").toString()
-                password = project.property("sonatype.password").toString()
-            }
-        }
-    }
 }
 
 signing {
     sign(publishing.publications["maven"])
-//    useGpgCmd()
+}
+
+tasks.named("publish").configure {
+    doLast {
+        val username = project.property("sonatype.username").toString()
+        val password = project.property("sonatype.password").toString()
+        val connection = URI.create("https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/$group").toURL().openConnection() as HttpURLConnection
+        connection.requestMethod = "POST"
+        connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString("$username:$password".toByteArray()))
+        connection.setRequestProperty("Content-Type", "application/json")
+        connection.doOutput = true
+        connection.outputStream.write("""{"publishing_type": "automatic"}""".toByteArray())
+        val responseCode = connection.responseCode
+        if (responseCode in 200..299) {
+            println("Successfully uploaded to Central Portal")
+        } else {
+            throw GradleException("Failed to upload to Central Portal: $responseCode - ${connection.inputStream?.bufferedReader()?.readText()}")
+        }
+    }
 }
