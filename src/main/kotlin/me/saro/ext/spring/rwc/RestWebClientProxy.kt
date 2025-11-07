@@ -42,16 +42,11 @@ class RestWebClientProxy private constructor(
     }
 
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>): Any? {
-        val invoker = methodProxyMap[method]
-        return if (invoker != null) {
-            invoker.invoke(proxy, method, args)
-        } else {
-            when (val methodName = method.name) {
-                "toString" -> return "$className.$methodName()"
-                "hashCode" -> return method.hashCode()
-                "equals" -> method == args[0]
-                else -> null
-            }
+        return methodProxyMap[method]?.invoke(proxy, method, args) ?: when (method.name) {
+            "toString" -> return toString()
+            "hashCode" -> return hashCode()
+            "equals" -> equals(proxy)
+            else -> null
         }
     }
 
@@ -66,6 +61,8 @@ class RestWebClientProxy private constructor(
     override fun toString(): String {
         return className
     }
+
+    fun beanName(): String = className.replace(".", "DOT")
 
     companion object {
         fun of(

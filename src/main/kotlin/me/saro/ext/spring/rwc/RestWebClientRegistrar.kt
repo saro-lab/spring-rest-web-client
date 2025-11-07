@@ -35,7 +35,7 @@ class RestWebClientRegistrar(
 
         findAllRestWebClient(registry, basePackages)
             .map { RestWebClientProxy.of(it, environmentWrapper) }
-            .forEach { proxy -> registry.registerBeanDefinition(proxy.toString(), proxy.beanDefinition) }
+            .forEach { proxy -> registry.registerBeanDefinition(proxy.beanName(), proxy.beanDefinition) }
     }
 
     private fun findAllRestWebClient(registry: BeanDefinitionRegistry, basePackages: Array<String>): List<MetadataReader> {
@@ -45,11 +45,8 @@ class RestWebClientRegistrar(
         return Stream.of(*basePackages)
             .parallel()
             .flatMap { basePackage -> Stream.of(*resourceLoader.getResources("classpath*:$basePackage/**/*.class")) }
-            .filter { resource ->
-                val url: String = resource.url.path
-                val uri: String? = resource.uri.path
-                !url.contains("$$") && (uri != null || !url.contains("/test/") && !url.endsWith("Test.class"))
-            }
+            //.filter { it.exists() && it.isFile && it.isReadable && !it.url.path.contains("$$")}
+            .filter { it.exists() && it.isFile && it.isReadable }
             .sequential()
             // I don't know, it is thread-safe: change to sequential
             .map { resource -> metadataReaderFactory.getMetadataReader(resource) }

@@ -3,7 +3,7 @@ package share.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 
-class ApiResponse<T> private constructor(
+class ApiResponse<T>(
     val code: String,
     @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
     val message: String? = null,

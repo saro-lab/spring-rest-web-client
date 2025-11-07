@@ -4,8 +4,8 @@ import java.net.URI
 import java.util.Base64
 
 plugins {
-    val kotlinVersion = "2.2.20"
-    val springBootVersion = "4.0.0-M2" // !! sync springBootVersion vals
+    val kotlinVersion = "2.3.0-Beta2"
+    val springBootVersion = "4.0.0-M3" // !! sync springBootVersion vals
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.allopen") version kotlinVersion
@@ -13,7 +13,6 @@ plugins {
     id("org.springframework.boot") version springBootVersion
     id("io.spring.dependency-management") version "1.1.7"
     id("org.ec4j.editorconfig") version "0.1.0"
-    id("com.vanniktech.maven.publish") version "0.28.0" apply false
     id("idea")
     signing
     `maven-publish`
@@ -53,7 +52,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(23))
     }
     withJavadocJar()
     withSourcesJar()
@@ -61,17 +60,18 @@ java {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
+        jvmTarget.set(JvmTarget.JVM_23)
     }
 }
 
 tasks.test {
     useJUnitPlatform()
+    //jvmArgs = listOf("-Dspring.profiles.active=test", "-XX:+EnableDynamicAgentLoading")
 }
 
 configure<JavaPluginExtension> {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
 }
 
 publishing {
