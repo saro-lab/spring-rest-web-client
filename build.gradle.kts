@@ -27,9 +27,10 @@ idea {
 }
 
 val springBootVersion = "4.0.0" // !! sync springBootVersion vals
-var minorVersion: Int = 0
-group = "me.saro"
-version = "$springBootVersion.$minorVersion"
+val minorVersion: Int = 0
+val projectGroupId = "me.saro"
+val projectArtifactId = "spring-rest-web-client"
+val projectVersion = "$springBootVersion.$minorVersion"
 
 repositories {
     mavenCentral()
@@ -78,9 +79,9 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
 
-            groupId = "me.saro"
-            artifactId = "spring-rest-web-client"
-            version = version
+            groupId = projectGroupId
+            artifactId = projectArtifactId
+            version = projectVersion
 
             from(components["java"])
 
@@ -132,9 +133,10 @@ signing {
 
 tasks.named("publish").configure {
     doLast {
+        println("Ready, upload to Central Portal")
         val username = project.property("sonatype.username").toString()
         val password = project.property("sonatype.password").toString()
-        val connection = URI.create("https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/$group").toURL().openConnection() as HttpURLConnection
+        val connection = URI.create("https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/$projectGroupId").toURL().openConnection() as HttpURLConnection
         connection.requestMethod = "POST"
         connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString("$username:$password".toByteArray()))
         connection.setRequestProperty("Content-Type", "application/json")
@@ -148,3 +150,4 @@ tasks.named("publish").configure {
         }
     }
 }
+
