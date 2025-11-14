@@ -1,25 +1,16 @@
 package ktest
 
-import me.saro.ext.spring.rwc.EnableRestWebClient
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.SpringBootConfiguration
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.web.reactive.config.EnableWebFlux
 import share.model.DataItem
+import share.server.App
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@SpringBootConfiguration
-@EnableAutoConfiguration
-@EnableWebFlux
-@EnableRestWebClient
-@ComponentScan(basePackages = ["share.*"])
-class
-BasicTest{
+
+@SpringBootTest(classes = [App::class], webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+class BasicTest{
     @Autowired
     private lateinit var testClient: TestKotlinClient
 

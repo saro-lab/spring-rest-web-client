@@ -45,8 +45,7 @@ class RestWebClientRegistrar(
         return Stream.of(*basePackages)
             .parallel()
             .flatMap { basePackage -> Stream.of(*resourceLoader.getResources("classpath*:$basePackage/**/*.class")) }
-            //.filter { it.exists() && it.isFile && it.isReadable && !it.url.path.contains("$$")}
-            .filter { it.exists() && it.isFile && it.isReadable }
+            .filter { it.exists() && it.isFile }
             .sequential()
             // I don't know, it is thread-safe: change to sequential
             .map { resource -> metadataReaderFactory.getMetadataReader(resource) }

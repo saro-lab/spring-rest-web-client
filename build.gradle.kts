@@ -5,7 +5,7 @@ import java.util.Base64
 
 plugins {
     val kotlinVersion = "2.3.0-Beta2"
-    val springBootVersion = "4.0.0-M3" // !! sync springBootVersion vals
+    val springBootVersion = "4.0.0-RC2" // !! sync springBootVersion vals
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.allopen") version kotlinVersion
@@ -27,7 +27,7 @@ idea {
 }
 
 val springBootVersion = "4.0.0" // !! sync springBootVersion vals
-val minorVersion: Int = 0
+val minorVersion: Int = 1
 val projectGroupId = "me.saro"
 val projectArtifactId = "spring-rest-web-client"
 val projectVersion = "$springBootVersion.$minorVersion"
