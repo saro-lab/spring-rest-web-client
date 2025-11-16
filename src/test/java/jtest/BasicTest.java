@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import share.model.DataItem;
 import share.server.App;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class BasicTest {
@@ -14,8 +15,12 @@ public class BasicTest {
     @Autowired
     private TestJavaClient testClient;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Value("${client.local.token}")
     private String token;
+
 
     @Test
     public void test01() {
@@ -88,5 +93,20 @@ public class BasicTest {
         var res = testClient.body("111&1", "22=22");
         Assertions.assertEquals("a=111%261&b=22%3D22", res);
         System.out.println(res);
+    }
+
+    @Test
+    public void test09() {
+        var res = testClient.noParam().block();
+        Assertions.assertTrue(res.getSuccess());
+        System.out.println(res);
+    }
+
+    @Test
+    public void test10() {
+        var res = testClient.json().block();
+        Assertions.assertEquals("1", res.at("/a").asText());
+        Assertions.assertEquals(3, res.at("/b").size());
+        System.out.println(objectMapper.writeValueAsString(res));
     }
 }

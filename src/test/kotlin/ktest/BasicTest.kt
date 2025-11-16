@@ -5,14 +5,18 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import share.model.ApiResponse
 import share.model.DataItem
 import share.server.App
+import tools.jackson.databind.ObjectMapper
 
 
 @SpringBootTest(classes = [App::class], webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class BasicTest{
+class BasicTest {
     @Autowired
     private lateinit var testClient: TestKotlinClient
+
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
     @Value("\${client.local.token}")
     private lateinit var token: String
@@ -83,8 +87,23 @@ class BasicTest{
 
     @Test
     fun test08() {
-        val res: String? = testClient.body("111&1", "22=22")
+        val res: String = testClient.body("111&1", "22=22")
         Assertions.assertEquals("a=111%261&b=22%3D22", res)
         println(res)
+    }
+
+    @Test
+    fun test09() {
+        val res: ApiResponse<String> = testClient.noParam().block()!!
+        Assertions.assertTrue(res.success)
+        println(res)
+    }
+
+    @Test
+    fun test10() {
+        val res = testClient.json().block()
+        Assertions.assertEquals("1", res!!.at("/a").asText())
+        Assertions.assertEquals(3, res.at("/b").size())
+        println(objectMapper.writeValueAsString(res))
     }
 }

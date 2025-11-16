@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 import share.model.ApiResponse
 import share.model.DataItem
+import tools.jackson.databind.JsonNode
 
 @RestWebClient(
     uri = "\${client.local.uri}/api/v1",
@@ -45,4 +46,10 @@ interface TestKotlinClient {
     // blocking
     @PostMapping(path = ["/body"], consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     fun body(@RequestParam a: String, @RequestParam("b") c: String): String
+
+    @GetMapping(path = ["/no-param"])
+    fun noParam(): Mono<ApiResponse<String>>
+
+    @GetMapping(path = ["/json"])
+    fun json(): Mono<JsonNode>
 }

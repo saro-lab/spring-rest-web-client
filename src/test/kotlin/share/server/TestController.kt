@@ -1,12 +1,13 @@
 package share.server
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import share.model.ApiResponse
 import share.model.DataItem
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectMapper
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,4 +40,12 @@ class TestController {
     @PostMapping("/body", produces = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     fun body(@RequestBody(required = false) body: String?): String = body ?: ""
 
+
+    @GetMapping("/no-param")
+    fun noParam(): Mono<ApiResponse<String>> =
+        Mono.just(ApiResponse.ok(null))
+
+    @GetMapping("/json")
+    fun json(): Mono<JsonNode> =
+        Mono.just(mapper.readTree("""{"a":1, "b": [1, 2, 3]}"""))
 }

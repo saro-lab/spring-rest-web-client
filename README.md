@@ -9,7 +9,7 @@
 # QUICK START
 ### Gradle
 ```
-implementation("me.saro:spring-rest-web-client:4.0.0.1")
+implementation("me.saro:spring-rest-web-client:4.0.0.2")
 ```
 
 ### Maven
@@ -17,7 +17,7 @@ implementation("me.saro:spring-rest-web-client:4.0.0.1")
 <dependency>
   <groupId>me.saro</groupId>
   <artifactId>spring-rest-web-client</artifactId>
-  <version>4.0.0.1</version>
+  <version>4.0.0.2</version>
 </dependency>
 ```
 

@@ -41,7 +41,7 @@ class RestWebClientProxy private constructor(
         }
     }
 
-    override fun invoke(proxy: Any, method: Method, args: Array<out Any>): Any? {
+    override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
         return methodProxyMap[method]?.invoke(proxy, method, args) ?: when (method.name) {
             "toString" -> return toString()
             "hashCode" -> return hashCode()
