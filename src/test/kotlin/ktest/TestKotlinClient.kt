@@ -33,6 +33,9 @@ interface TestKotlinClient {
     @PostMapping("/data")
     fun data3(@RequestBody dataItem: DataItem): ApiResponse<DataItem>
 
+    @PostMapping(path = ["/data"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun data31(@RequestBody dataItem: String?): ApiResponse<DataItem>
+
     @PutMapping("/param")
     fun justParam1(@RequestParam a: String, @RequestParam("b") d: String): Mono<ApiResponse<String>>
 

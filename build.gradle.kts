@@ -27,7 +27,7 @@ idea {
 }
 
 val springBootVersion = "4.0.0" // !! sync springBootVersion vals
-val minorVersion: Int = 2
+val minorVersion: Int = 3
 val projectGroupId = "me.saro"
 val projectArtifactId = "spring-rest-web-client"
 val projectVersion = "$springBootVersion.$minorVersion"

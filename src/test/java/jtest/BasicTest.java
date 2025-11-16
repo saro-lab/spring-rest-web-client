@@ -66,6 +66,15 @@ public class BasicTest {
     }
 
     @Test
+    public void test04_2() {
+        var input = new DataItem("saro2", "1", "j@saro.me");
+        var res = testClient.data31(objectMapper.writeValueAsString(input));
+        Assertions.assertEquals("ok", res.getCode());
+        Assertions.assertEquals(input, res.getData());
+        System.out.println(res.getData());
+    }
+
+    @Test
     public void test05() {
         var res = testClient.justParam1("1", "2").block();
         Assertions.assertEquals("ok", res.getCode());

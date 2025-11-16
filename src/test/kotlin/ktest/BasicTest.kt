@@ -57,9 +57,18 @@ class BasicTest {
     fun test04_1() {
         val input = DataItem("saro", "1", "j@saro.me")
         val res = testClient.data3(input)
-        Assertions.assertEquals(res?.code, "ok")
-        Assertions.assertEquals(res?.data, DataItem("saro", "1", "j@saro.me"))
-        println(res?.data)
+        Assertions.assertEquals(res.code, "ok")
+        Assertions.assertEquals(res.data, DataItem("saro", "1", "j@saro.me"))
+        println(res.data)
+    }
+
+    @Test
+    fun test04_2() {
+        val input = DataItem("saro2", "1", "j@saro.me")
+        val res: ApiResponse<DataItem> = testClient.data31(objectMapper.writeValueAsString(input))
+        Assertions.assertEquals("ok", res.code)
+        Assertions.assertEquals(input, res.data)
+        println(res.data)
     }
 
     @Test

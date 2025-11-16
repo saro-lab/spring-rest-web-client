@@ -120,7 +120,13 @@ dynamicHeaders: $dynamicHeaders
                     }
                 }
             } else if (body != null) {
-                { req, vars, params, arg -> if (arg != null) { req.bodyValueWithType(arg) } }
+                { req, vars, params, arg -> if (arg != null) {
+                    if (arg is String) {
+                        req.bodyValue(arg)
+                    } else {
+                        req.bodyValueWithType(arg)
+                    }
+                } }
             } else {
                 val bindName = bindParam?.value ?: name
                 { req, vars, params, arg -> arg?.also { vars[bindName] = it.toString() } }

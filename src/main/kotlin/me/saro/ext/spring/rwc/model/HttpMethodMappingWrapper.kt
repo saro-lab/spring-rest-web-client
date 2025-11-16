@@ -62,6 +62,9 @@ class HttpMethodMappingWrapper(
                     dynamicHeaders[HttpHeaders.ACCEPT] = it
                 } else {
                     staticHeaders[HttpHeaders.ACCEPT] = it
+                    if (it.lowercase().contains("json")) {
+                        dynamicHeaders[HttpHeaders.CONTENT_TYPE] = it
+                    }
                 }
             }
 

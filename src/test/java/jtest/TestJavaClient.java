@@ -33,6 +33,9 @@ public interface TestJavaClient {
     @PostMapping("/data")
     ApiResponse<DataItem> data3(@RequestBody DataItem dataItem);
 
+    @PostMapping(path = "/data", consumes = MediaType.APPLICATION_JSON_VALUE)
+    ApiResponse<DataItem> data31(@RequestBody String dataItem);
+
     @PutMapping("/param")
     Mono<ApiResponse<String>> justParam1(@RequestParam("a") String a, @RequestParam("b") String d);
 
