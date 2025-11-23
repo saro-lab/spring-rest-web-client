@@ -4,8 +4,8 @@ import java.net.URI
 import java.util.Base64
 
 plugins {
-    val kotlinVersion = "2.3.0-Beta2"
-    val springBootVersion = "4.0.0-RC2" // !! sync springBootVersion vals
+    val kotlinVersion = "2.3.0-RC"
+    val springBootVersion = "4.0.0" // !! sync springBootVersion vals
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.allopen") version kotlinVersion
@@ -27,7 +27,7 @@ idea {
 }
 
 val springBootVersion = "4.0.0" // !! sync springBootVersion vals
-val minorVersion: Int = 3
+val minorVersion: Int = 4
 val projectGroupId = "me.saro"
 val projectArtifactId = "spring-rest-web-client"
 val projectVersion = "$springBootVersion.$minorVersion"
@@ -53,7 +53,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(23))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
     withJavadocJar()
     withSourcesJar()
@@ -61,7 +61,7 @@ java {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_23)
+        jvmTarget.set(JvmTarget.JVM_25)
     }
 }
 
@@ -70,8 +70,8 @@ tasks.test {
 }
 
 configure<JavaPluginExtension> {
-    sourceCompatibility = JavaVersion.VERSION_23
-    targetCompatibility = JavaVersion.VERSION_23
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 publishing {
