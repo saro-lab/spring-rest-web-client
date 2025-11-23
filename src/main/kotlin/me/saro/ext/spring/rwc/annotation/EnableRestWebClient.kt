@@ -1,5 +1,6 @@
-package me.saro.ext.spring.rwc
+package me.saro.ext.spring.rwc.annotation
 
+import me.saro.ext.spring.rwc.RestWebClientRegistrar
 import org.springframework.context.annotation.Import
 
 @Target(AnnotationTarget.CLASS)

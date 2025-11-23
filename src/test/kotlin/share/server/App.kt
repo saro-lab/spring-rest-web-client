@@ -1,6 +1,6 @@
 package share.server
 
-import me.saro.ext.spring.rwc.EnableRestWebClient
+import me.saro.ext.spring.rwc.annotation.EnableRestWebClient
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.ComponentScan

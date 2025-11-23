@@ -1,6 +1,6 @@
 package ktest
 
-import me.saro.ext.spring.rwc.RestWebClient
+import me.saro.ext.spring.rwc.annotation.RestWebClient
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono

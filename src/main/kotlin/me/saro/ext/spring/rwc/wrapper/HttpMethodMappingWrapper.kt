@@ -1,6 +1,6 @@
-package me.saro.ext.spring.rwc.model
+package me.saro.ext.spring.rwc.wrapper
 
-import me.saro.ext.spring.rwc.RestWebClientMethodProxy
+import me.saro.ext.spring.rwc.proxy.RestWebClientMethodProxy
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*

@@ -1,4 +1,4 @@
-package me.saro.ext.spring.rwc.model
+package me.saro.ext.spring.rwc.wrapper
 
 import org.springframework.core.env.Environment
 

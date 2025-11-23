@@ -1,4 +1,4 @@
-package me.saro.ext.spring.rwc
+package me.saro.ext.spring.rwc.annotation
 
 import org.springframework.stereotype.Component
 

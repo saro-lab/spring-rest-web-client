@@ -1,7 +1,8 @@
-package me.saro.ext.spring.rwc
+package me.saro.ext.spring.rwc.proxy
 
-import me.saro.ext.spring.rwc.model.EnvironmentWrapper
-import me.saro.ext.spring.rwc.model.HttpMethodMappingWrapper
+import me.saro.ext.spring.rwc.annotation.RestWebClient
+import me.saro.ext.spring.rwc.wrapper.EnvironmentWrapper
+import me.saro.ext.spring.rwc.wrapper.HttpMethodMappingWrapper
 import org.springframework.beans.factory.config.BeanDefinition
 import org.springframework.beans.factory.support.GenericBeanDefinition
 import org.springframework.core.type.classreading.MetadataReader
@@ -22,8 +23,6 @@ class RestWebClientProxy private constructor(
     private val instant = Proxy.newProxyInstance(clazz.classLoader, arrayOf(clazz), this)
     val uri: String
 
-
-
     val beanDefinition: BeanDefinition = GenericBeanDefinition().apply {
             setBeanClass(clazz)
             instanceSupplier = Supplier { instant }
@@ -31,8 +30,8 @@ class RestWebClientProxy private constructor(
     private val methodProxyMap: Map<Method, RestWebClientMethodProxy>
 
     init {
-
         val restWebClient: Map<String, Any?> = annotationMetadata.getAnnotationAttributes(RestWebClient::class.java.name)!!
+        @Suppress("UNCHECKED_CAST")
         val envWebClient = environmentWrapper.bindAliases(restWebClient["environmentAliases"] as Array<String>)
         this.uri = envWebClient.replacePattern(restWebClient["uri"] as String)
             .also { if (it.isEmpty()) { throw IllegalArgumentException("@RestWebClient(uri) is empty $className") } }

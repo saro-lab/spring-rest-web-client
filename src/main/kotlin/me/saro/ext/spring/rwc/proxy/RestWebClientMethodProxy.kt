@@ -1,8 +1,8 @@
-package me.saro.ext.spring.rwc
+package me.saro.ext.spring.rwc.proxy
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import me.saro.ext.spring.rwc.model.HttpMethodMappingWrapper
+import me.saro.ext.spring.rwc.wrapper.HttpMethodMappingWrapper
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.springframework.core.ParameterizedTypeReference
